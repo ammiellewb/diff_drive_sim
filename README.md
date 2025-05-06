@@ -41,8 +41,10 @@ ros2 topic echo /pose
 ```
 # Move Forward (0.5 m/s)
 ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.5}, angular: {z: 0.0}}" -1
+
 # Rotate Counter-Clockwise (0.5 rad/s)
 ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.0}, angular: {z: 0.5}}" -1
+
 # Move in a Curve (0.3 m/s forward + 0.2 rad/s turn)
 ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.3}, angular: {z: 0.2}}" -1
 ```
