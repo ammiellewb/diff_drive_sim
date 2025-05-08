@@ -51,9 +51,10 @@ class DiffDriveSim : public rclcpp::Node
 
             // timer
             timer_ = this->create_wall_timer(
-                1ms, std::bind(&DiffDriveSim::updateSim, this));
+                20ms, std::bind(&DiffDriveSim::updateSim, this));
             
             RCLCPP_INFO(this->get_logger(), "DiffDriveSim node started.");
+            RCLCPP_INFO(this->get_logger(), "Params: L=%.2f, r=%.2f", wheel_separation_, wheel_radius_);
 
         }
 
@@ -69,8 +70,8 @@ class DiffDriveSim : public rclcpp::Node
 
             // 1st order dynamics for velocity changes
             const double tau = 0.1; // time constant for velocity changes
-            v_ += (target_v_ - v_) * (1.0-exp(tau));
-            omega_ += (target_omega_ - omega_) * (1.0-exp(tau));
+            v_ += (target_v_ - v_) * (1.0-exp(-tau));
+            omega_ += (target_omega_ - omega_) * (1.0-exp(-tau));
 
             // update state variables using bicycle model
             double dt = 0.02; // time step
@@ -117,7 +118,7 @@ class DiffDriveSim : public rclcpp::Node
             // set velocity
             odom_msg->twist.twist.linear.x = v_;
             odom_msg->twist.twist.linear.y = 0.0;
-            odom_msg->twist.twist.linear.z = omega_;
+            odom_msg->twist.twist.angular.z = omega_;
 
             odom_pub_->publish(std::move(odom_msg));
         }
